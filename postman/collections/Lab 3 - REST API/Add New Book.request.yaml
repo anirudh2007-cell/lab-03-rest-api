@@ -1,0 +1,20 @@
+$kind: http-request
+description: ""
+url: http://localhost:3000/books
+method: POST
+body:
+  type: json
+  content: "\r
+
+    {\r
+
+    \    \"title\": \"The Power of Your Subconscious Mind\",\r
+
+    \    \"author\": \"Joseph Murphy\",\r
+
+    \    \"price\": 299,\r
+
+    \    \"pages\": 300\r
+
+    }\r\n"
+order: 9000

@@ -1,0 +1,9 @@
+$kind: http-request
+name: Invalid Price Range.
+description: ""
+url: http://localhost:3000/books?min_price=400&max_price=200
+method: GET
+queryParams:
+  min_price: "400"
+  max_price: "200"
+order: 8000

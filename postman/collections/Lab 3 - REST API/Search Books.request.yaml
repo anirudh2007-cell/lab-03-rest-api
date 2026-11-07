@@ -1,0 +1,7 @@
+$kind: http-request
+description: ""
+url: http://localhost:3000/books?search_q=Atomic
+method: GET
+queryParams:
+  search_q: Atomic
+order: 2000
