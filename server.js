@@ -232,15 +232,20 @@ app.delete('/books/:id', async (request, response) => {
 });
 
 
+
 const startServer = async () => {
     try {
         db = await initializeDb();
 
-        app.listen(3000, () => {
-            console.log('Server running at http://localhost:3000');
+        const PORT = process.env.PORT || 3000;
+
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server running on port ${PORT}`);
         });
+
     } catch (error) {
         console.error('Database initialization failed:', error.message);
+        process.exit(1);
     }
 };
 
