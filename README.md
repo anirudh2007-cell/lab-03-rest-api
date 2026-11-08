@@ -1,23 +1,66 @@
+# Lab 3 – REST API, Query Parameters, Validation and Debugging
 
-# Lab 3: REST API, Query Parameters, Validation and Debugging
+## Student Details
 
-## Project Overview
-This project implements a RESTful Book Management API using Node.js, Express.js and SQLite.
+**Name:** Anirudh  
+**Course:** Backend Development Fundamentals  
+**Year:** II  
+**Term:** II
 
-It supports CRUD operations, searching, sorting, pagination, price filtering, input validation and error handling.
+## Live Deployment
 
-## Technologies Used
+**Platform:** Render
+
+**Live API URL:**  
+https://lab-03-rest-api-oute.onrender.com/books
+
+**GitHub Repository:**  
+https://github.com/anirudh2007-cell/lab-03-rest-api
+
+---
+
+## 1. Objective
+
+To develop a RESTful API using Node.js, Express.js and SQLite by implementing search, sorting, filtering, pagination, input validation and appropriate HTTP status codes.
+
+This lab extends the basic CRUD operations developed in Lab 2 by introducing advanced query parameters, validation techniques and debugging practices.
+
+## 2. Technologies Used
+
 - Node.js
 - Express.js
 - SQLite
-- JavaScript
+- sqlite
+- sqlite3
 - Postman
+- Visual Studio Code
+- Git and GitHub
+- Render
 
-## Project Structure
+## 3. Project Structure
+
 ```text
 LAB-03/
+│
 ├── screenshots/
-├── node_modules/
+│   ├── 01-get-all-books.png
+│   ├── 02-search-books.png
+│   ├── 03-sort-ascending.png
+│   ├── 04-sort-descending.png
+│   ├── 05-pagination.png
+│   ├── 06-price-filter.png
+│   ├── 07-invalid-price.png
+│   ├── 08-add-book.png
+│   ├── 09-invalid-book.png
+│   ├── 10-update-book.png
+│   ├── 11-get-updated-book.png
+│   ├── 12-delete-book.png
+│   └── 13-book-not-found.png
+│
+├── postman/
+│   └── collections/
+│       └── Lab 3 - REST API/
+│
 ├── book.db
 ├── database.js
 ├── server.js
@@ -27,85 +70,260 @@ LAB-03/
 └── README.md
 ```
 
-## Installation
+## 4. Database Details
 
-1. Install Node.js.
-2. Open the project folder in VS Code.
-3. Install dependencies:
+**Database Name:** `book.db`  
+**Table Name:** `books`
+
+The `books` table contains the following columns:
+
+| Column | Data Type | Description |
+|---|---|---|
+| id | INTEGER | Primary key |
+| title | TEXT | Book title |
+| author | TEXT | Author name |
+| price | REAL | Book price |
+| pages | INTEGER | Number of pages |
+
+The application uses SQLite for storing and managing book records.
+
+The database is initialized automatically when the server starts.
+
+## 5. API Endpoints
+
+| HTTP Method | Endpoint | Description |
+|---|---|---|
+| GET | `/books` | Retrieve all books |
+| GET | `/books/:id` | Retrieve a book by ID |
+| POST | `/books` | Add a new book |
+| PUT | `/books/:id` | Update an existing book |
+| DELETE | `/books/:id` | Delete a book |
+
+These endpoints follow REST principles and use HTTP methods to perform CRUD operations.
+
+## 6. Query Parameters
+
+The GET `/books` endpoint supports the following query parameters:
+
+| Parameter | Description | Example |
+|---|---|---|
+| search_q | Search books by partial title | `?search_q=Atomic` |
+| order_by | Select sorting column | `?order_by=price` |
+| order | Ascending or descending order | `?order=DESC` |
+| limit | Maximum number of records | `?limit=2` |
+| offset | Number of records to skip | `?offset=2` |
+| min_price | Minimum book price | `?min_price=200` |
+| max_price | Maximum book price | `?max_price=400` |
+
+### Example Requests
+
+**Search books:**
+
+```http
+GET /books?search_q=Atomic
+```
+
+**Sort by price in ascending order:**
+
+```http
+GET /books?order_by=price&order=ASC
+```
+
+**Sort by price in descending order:**
+
+```http
+GET /books?order_by=price&order=DESC
+```
+
+**Filter by price:**
+
+```http
+GET /books?min_price=200&max_price=400
+```
+
+**Pagination:**
+
+```http
+GET /books?limit=2&offset=0
+```
+
+## 7. Input Validation
+
+The POST and PUT routes validate the required book details.
+
+- Title must be provided and cannot be empty.
+- Author must be provided and cannot be empty.
+- Price must be a valid, non-negative numeric value.
+- Pages must be a positive integer when provided.
+- Invalid sorting columns are rejected.
+- Sorting order must be ASC or DESC.
+- Limit must be a positive integer.
+- Offset must be a non-negative integer.
+- Minimum price cannot exceed maximum price.
+
+Invalid input returns HTTP 400 with a JSON error message.
+
+### Example Invalid Response
+
+```json
+{
+  "message": "Title, author and a valid non-negative numeric price are required"
+}
+```
+
+## 8. HTTP Status Codes
+
+| Status Code | Meaning | Usage |
+|---|---|---|
+| 200 | OK | Successful GET, PUT and DELETE |
+| 201 | Created | Book successfully added |
+| 400 | Bad Request | Invalid input or query parameters |
+| 404 | Not Found | Book ID does not exist |
+| 500 | Internal Server Error | Server-side error |
+
+Appropriate HTTP status codes help clients understand the results of API requests.
+
+## 9. SQL Injection Prevention
+
+Parameterized SQL queries with `?` placeholders are used to safely pass user-provided values into database queries.
+
+Sorting columns are restricted to an allowed list, and sorting order is validated before being included in the SQL query.
+
+These practices help prevent SQL injection attacks and improve application security.
+
+## 10. Running the Project
+
+**Step 1: Clone the repository**
+
+```bash
+git clone https://github.com/anirudh2007-cell/lab-03-rest-api.git
+```
+
+**Step 2: Navigate to the project folder**
+
+```bash
+cd lab-03-rest-api
+```
+
+**Step 3: Install dependencies**
 
 ```bash
 npm install
 ```
 
-4. Start the development server:
+**Step 4: Start the server**
+
+```bash
+npm start
+```
+
+Alternatively, for development:
 
 ```bash
 npm run dev
 ```
 
-Server URL:
-http://localhost:3000
+**Step 5: Open the API**
 
-## API Endpoints
+```text
+http://localhost:3000/books
+```
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | /books | Get all books |
-| GET | /books/:id | Get a book by ID |
-| POST | /books | Add a new book |
-| PUT | /books/:id | Update a book |
-| DELETE | /books/:id | Delete a book |
+The server connects to the SQLite database before accepting requests.
 
-## Query Parameters
+## 11. Testing
 
-| Parameter | Description |
-|---|---|
-| search_q | Search books by title |
-| order_by | Sort using a column |
-| order | ASC or DESC |
-| limit | Maximum number of records |
-| offset | Number of records to skip |
-| min_price | Minimum book price |
-| max_price | Maximum book price |
+The API routes were tested using Postman.
 
-### Example Requests
+The testing activities include:
 
-Search:
-GET /books?search_q=Atomic
+1. Retrieve all books.
+2. Search books using partial titles.
+3. Sort books in ascending order.
+4. Sort books in descending order.
+5. Test pagination using limit and offset.
+6. Filter books using minimum and maximum prices.
+7. Test invalid price filters.
+8. Add a new book.
+9. Validate missing or invalid book details.
+10. Update an existing book.
+11. Retrieve the updated book.
+12. Delete an existing book.
+13. Test a non-existing book ID.
 
-Ascending sorting:
-GET /books?order_by=price&order=ASC
+The Postman request collection is included in the `postman/collections` directory.
 
-Descending sorting:
-GET /books?order_by=price&order=DESC
+## 12. Database Verification
 
-Pagination:
-GET /books?limit=2&offset=0
+The application uses SQLite to store and retrieve book records.
 
-Price filtering:
-GET /books?min_price=250&max_price=350
+The database is initialized through `database.js`, which creates the `books` table if it does not already exist.
 
-## Validation and Status Codes
+The application includes the following initial records:
 
-- 200: Successful request
-- 201: Book created successfully
-- 400: Invalid input
-- 404: Book not found
-- 500: Internal server error
+| ID | Title | Author | Price |
+|---|---|---|---|
+| 1 | The Alchemist | Paulo Coelho | 250 |
+| 2 | Atomic Habits | James Clear | 450 |
+| 3 | Wings of Fire | A.P.J. Abdul Kalam | 300 |
+| 4 | Rich Dad Poor Dad | Robert Kiyosaki | 350 |
 
-## Debugging Exercises
+Database operations are performed using parameterized SQLite queries.
 
-1. EADDRINUSE: Fixed by identifying the process using the occupied port.
-2. Wrong import path: Corrected the database module path.
-3. Table-name typo: Used the correct books table name.
-4. Missing await: Used await for asynchronous database operations.
+## 13. Screenshots
 
-## Testing
+The `screenshots` folder contains Postman testing evidence.
 
-All API endpoints were tested using Postman.
+The screenshots demonstrate:
 
-Screenshots of successful and unsuccessful requests are available in the screenshots folder.
+- Successful GET requests.
+- Search functionality.
+- Ascending and descending sorting.
+- Pagination.
+- Price filtering.
+- Invalid price validation.
+- Successful POST requests.
+- Invalid POST request validation.
+- Successful PUT requests.
+- Verification of updated records.
+- Successful DELETE requests.
+- HTTP 404 responses for non-existing records.
 
-## Conclusion
+These screenshots provide evidence of successful and unsuccessful API test cases.
 
-The project demonstrates REST API development, query parameters, CRUD operations, validation, HTTP status codes and debugging using Node.js, Express.js and SQLite.
+## 14. Debugging
+
+Common backend development errors studied during this lab include:
+
+**EADDRINUSE:** Occurs when the server port is already occupied by another process.
+
+**Incorrect Import Path:** Occurs when a required module or file is imported using an incorrect path.
+
+**Database Table Name Error:** Occurs when a SQL query references an incorrect table name.
+
+**Missing await:** Can cause asynchronous database operations to execute without waiting for their results.
+
+Debugging these errors helps improve the reliability and correctness of the application.
+
+## 15. Learning Outcomes
+
+Through this lab, I learned:
+
+- REST API design using Express.js.
+- Query parameters for searching, sorting, filtering and pagination.
+- Input validation and error handling.
+- Correct use of HTTP status codes.
+- Parameterized SQL queries.
+- Prevention of SQL injection vulnerabilities.
+- Debugging common backend development errors.
+- Testing REST API endpoints using Postman.
+- Performing CRUD operations using SQLite.
+- Deploying a Node.js REST API using Render.
+
+## 16. Conclusion
+
+This lab helped me extend basic CRUD operations into a more structured REST API.
+
+I implemented query parameters, input validation, appropriate HTTP status codes and SQL injection prevention techniques using Express.js and SQLite.
+
+The project also provided practical experience in API testing, debugging, GitHub version control and deployment using Render.
